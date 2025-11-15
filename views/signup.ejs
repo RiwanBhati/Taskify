@@ -1,0 +1,112 @@
+<%- include('partials/header') %>
+
+<body class="bg-medium-gray">
+
+    <main class="form-main">
+        <div class="form-box">
+            <div class="form-header">
+                <img src="/images/logo.png" alt="Taskify Logo">
+                <h1>Taskify</h1>
+            </div>
+            <h2>CREATE ACCOUNT</h2>
+            <p>Join taskify to boost your productivity and achieve your goals</p>
+            <form>
+                <div class="name-row">
+                    <div class="input-group">
+                        <label for="first-name">First Name</label>
+                        <input type="text" id="first-name" placeholder="John" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="last-name">Last Name</label>
+                        <input type="text" id="last-name" placeholder="Doe">
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" placeholder="Enter your email" required>
+                </div>
+                
+                <div class="input-group">
+                    <label for="password">Password</label>
+                    <div class="password-wrapper">
+                        <input type="password" id="password" placeholder="Enter Password" required>
+                        <span class="eye-icon" id="signup-password-eye">👁️</span> 
+                    </div>
+                </div>
+                
+                <div class="input-group">
+                    <label for="confirm-password">Confirm Password</label>
+                    <div class="password-wrapper">
+                        <input type="password" id="confirm-password" placeholder="Confirm Password" required>
+                        <span class="eye-icon" id="signup-confirm-eye">👁️</span> 
+                    </div>
+                </div>
+                
+                <button type="submit" class="sign-in-btn">Create Account</button>
+            </form>
+            <p class="bottom-link">
+                Already have an account? <a href="/login">Sign in</a>
+            </p>
+        </div>
+    </main>
+
+    <script>
+        // --- Reusable Password Toggle Function ---
+        function setupPasswordToggle(inputId, iconId) {
+            const input = document.getElementById(inputId);
+            const icon = document.getElementById(iconId);
+
+            if (icon && input) {
+                icon.addEventListener('click', () => {
+                    if (input.type === 'password') {
+                        input.type = 'text';
+                        icon.textContent = '🙈'; 
+                    } else {
+                        input.type = 'password';
+                        icon.textContent = '👁️'; 
+                    }
+                });
+            }
+        }
+
+        // Apply the toggle function to both password fields
+        setupPasswordToggle('password', 'signup-password-eye');
+        setupPasswordToggle('confirm-password', 'signup-confirm-eye');
+        
+        // --- Existing Signup Form Logic ---
+        const signupForm = document.querySelector('.form-box form');
+        signupForm.addEventListener('submit', async (event) => {
+            event.preventDefault();
+            const firstName = document.getElementById('first-name').value;
+            const lastName = document.getElementById('last-name').value;
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirm-password').value;
+
+            if (password !== confirmPassword) {
+                alert('Passwords do not match!');
+                return;
+            }
+            const userData = { firstName, lastName, email, password };
+
+            try {
+                const response = await fetch('http://localhost:3000/api/register', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(userData)
+                });
+                const result = await response.json();
+                if (response.ok) {
+                    alert('Sign up successful! ' + result.message);
+                    window.location.href = '/login'; 
+                } else {
+                    alert('Sign up failed: ' + result.message);
+                }
+            } catch (error) {
+                console.error('Error during sign up:', error);
+                alert('An error occurred. Please check the console and try again.');
+            }
+        });
+    </script>
+
+<%- include('partials/footer') %>

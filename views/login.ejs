@@ -1,0 +1,80 @@
+<%- include('partials/header') %>
+
+<body class="bg-medium-gray">
+
+    <main class="form-main">
+        <div class="form-box">
+            <div class="form-header">
+                <img src="/images/logo.png" alt="Taskify Logo">
+                <h1>Taskify</h1>
+            </div>
+            <h2>Welcome Back</h2>
+            <p>Sign in to your account to continue your productivity journey</p>
+            <form>
+                <div class="input-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" placeholder="Enter your email" required>
+                </div>
+                <div class="input-group">
+                    <label for="password">Password</label>
+                    <div class="password-wrapper">
+                        <input type="password" id="password" placeholder="Enter your password" required>
+                        <span class="eye-icon" id="login-eye-icon">👁️</span>                    </div>
+                </div>
+                <a href="#" class="forgot-password">Forgot Password?</a>
+                <button type="submit" class="sign-in-btn">SIGN IN</button>
+            </form>
+            <p class="bottom-link">
+                Don't have an account? <a href="/signup">Sign up</a>
+            </p>
+        </div>
+    </main>
+
+    <script>
+        const loginForm = document.querySelector('.form-box form');
+        // --- New Eye Icon Toggle Functionality ---
+    const passwordInput = document.getElementById('password');
+    const eyeIcon = document.getElementById('login-eye-icon');
+
+    if (eyeIcon) {
+        eyeIcon.addEventListener('click', () => {
+            // Check the current type and toggle it
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                eyeIcon.textContent = '🙈'; // Change icon to 'hidden'
+            } else {
+                passwordInput.type = 'password';
+                eyeIcon.textContent = '👁️'; // Change icon back to 'visible'
+            }
+        });
+    }
+    // --- End Eye Icon Toggle ---
+        loginForm.addEventListener('submit', async (event) => {
+            event.preventDefault();
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const loginData = { email: email, password: password };
+
+            try {
+                // This URL is already correct, no change needed
+                const response = await fetch('http://localhost:3000/api/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(loginData)
+                });
+                const result = await response.json(); 
+                if (response.ok) {
+                    alert('Login successful! Welcome back.');
+                    // Fixed redirect link
+                    window.location.href = '/chooseAmong'; 
+                } else {
+                    alert('Login failed: ' + result.message);
+                }
+            } catch (error) {
+                console.error('Error during login:', error);
+                alert('An error occurred. Please check the console and try again.');
+            }
+        });
+    </script>
+
+<%- include('partials/footer') %>

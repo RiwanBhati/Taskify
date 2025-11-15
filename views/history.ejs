@@ -1,0 +1,67 @@
+<%- include('partials/header') %>
+
+<body> <main class="history-main">
+        <a href="/tasks" class="back-link">Back to tasks</a>
+
+        <section class="history-header">
+            <h1>TASK <span>HISTORY</span></h1>
+            <p>Track your completed tasks and productivity over time</p>
+        </section>
+
+        <section class="stats">
+            <div class="stat-item">
+                <div class="icon-container"><img src="/images/clipboard-tick.png" alt="icon" class="icons"></div>
+                <div class="stat-text">
+                    <span class="stat-number">3</span>
+                    <span class="stat-label">Total completed</span>
+                </div>
+            </div>
+            <div class="stat-item">
+                <div class="icon-container"><img src="/images/menu-board.png" alt="icon" class="icons"></div>
+                <div class="stat-text">
+                    <span class="stat-number">3</span>
+                    <span class="stat-label">Days Active</span>
+                </div>
+            </div>
+            <div class="stat-item">
+                <div class="icon-container"><img src="/images/bag-timer.png" alt="icon" class="icons"></div>
+                <div class="stat-text">
+                    <span class="stat-number">1.0</span>
+                    <span class="stat-label">Avg/day</span>
+                </div>
+            </div>
+        </section>
+
+        <section class="task-list">
+            <div class="task-group">
+                <h2 class="task-date"><img src="/images/note.png" alt="" class="note"> Monday, January 9, 2025</h2>
+                <div class="task-item">
+                    <div class="task-icon">✔</div>
+                    <div class="task-details">
+                        <h3>Review team feedback</h3>
+                        <p>Completed on Tuesday, 9 jan, 2025, 11:00 PM</p>
+                    </div>
+                </div>
+                <div class="task-item">
+                    <div class="task-icon">✔</div>
+                    <div class="task-details">
+                        <h3>Complete project presentation</h3>
+                        <p>Completed on Friday, 12 jan, 2025, 1:00 PM</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="task-group">
+                <h2 class="task-date"><img src="/images/note.png" alt="" class="note"> Sunday, January 14, 2025</h2>
+                <div class="task-item">
+                    <div class="task-icon">✔</div>
+                    <div class="task-details">
+                        <h3>Quantum Assignment</h3>
+                        <p>Completed on Monday, 14 jan, 2025, 10:00 AM</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+<%- include('partials/footer') %>

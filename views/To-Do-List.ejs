@@ -1,0 +1,168 @@
+<%- include('partials/header') %>
+
+<body> <main class="todo-main">
+        <h1>Your Daily <span>Tasks</span></h1>
+        <p>Organize your goals and track your progress</p>
+
+        <div class="progress-section">
+            <p id="progress-text">1 OUT OF 4 COMPLETED</p>
+            <div class="progress-bar">
+                <div class="progress-bar-fill"></div>
+            </div>
+        </div>
+
+        <div class="add-task-form">
+            <input type="text" id="task-input" placeholder="Add a new task.......">
+            <button class="btn-add" id="add-task-btn">+ Add Task</button>
+        </div>
+        
+
+        <ul class="task-list" id="task-list">
+            </ul>
+    </main>
+
+<script>
+document.addEventListener('DOMContentLoaded', async () => {
+    const taskInput = document.getElementById('task-input');
+    const addTaskBtn = document.getElementById('add-task-btn');
+    const taskList = document.getElementById('task-list');
+    const progressText = document.getElementById('progress-text');
+    const progressBar = document.querySelector('.progress-bar-fill');
+
+    let tasks = [];
+
+    async function loadTasks() {
+        try {
+            // GET: Read all tasks from the API
+            const res = await fetch('http://localhost:3000/api/tasks');
+            if (!res.ok) throw new Error('Failed to fetch tasks.');
+            tasks = await res.json();
+            renderTasks();
+        } catch (e) {
+            console.error('Error loading tasks:', e);
+            // If the database is empty or connection fails, fall back to empty array
+            tasks = [];
+            renderTasks();
+        }
+    }
+
+    async function toggleTaskStatus(task) {
+        try {
+            // PUT: Update task status. We use the task's unique MongoDB ID (_id)
+            const updatedTask = { completed: !task.completed };
+            const res = await fetch(`http://localhost:3000/api/tasks/${task._id}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(updatedTask)
+            });
+            if (!res.ok) throw new Error('Failed to update task.');
+            
+            await loadTasks(); 
+
+        } catch (e) {
+            console.error('Error updating task:', e);
+            alert('Could not update task status. (Ensure MongoDB is running)');
+        }
+    }
+
+    async function deleteTask(taskId) {
+        try {
+            // DELETE: Delete a task using its _id
+            const res = await fetch(`http://localhost:3000/api/tasks/${taskId}`, {
+                method: 'DELETE'
+            });
+            if (!res.ok) throw new Error('Failed to delete task.');
+            
+            await loadTasks();
+
+        } catch (e) {
+            console.error('Error deleting task:', e);
+            alert('Could not delete task. (Ensure MongoDB is running)');
+        }
+    }
+
+    function renderTasks() {
+        taskList.innerHTML = '';
+        const now = new Date();
+        let completedCount = 0;
+
+        if (tasks.length === 0) {
+            taskList.innerHTML = '<p class="no-tasks">No tasks yet — add one above!</p>';
+        }
+
+        tasks.forEach((task) => {
+            if (task.completed) completedCount++;
+
+            const li = document.createElement('li');
+            li.className = 'task-item';
+
+            const statusDiv = document.createElement('div');
+            statusDiv.className = `task-status ${task.completed ? 'completed' : 'pending'}`;
+            statusDiv.textContent = task.completed ? '✔' : '';
+            // Event listener calls toggleTaskStatus with the entire task object
+            statusDiv.addEventListener('click', () => toggleTaskStatus(task)); 
+
+            const detailsDiv = document.createElement('div');
+            detailsDiv.className = `task-details ${task.completed ? 'completed' : ''}`;
+            const h3 = document.createElement('h3');
+            h3.textContent = task.title;
+            const p = document.createElement('p');
+            // NOTE: Task.date will now be saved and retrieved from the DB
+            p.textContent = `Added ${task.date}`; 
+            detailsDiv.append(h3, p);
+
+            const deleteDiv = document.createElement('div');
+            deleteDiv.className = 'task-delete';
+            deleteDiv.innerHTML = '🗑️';
+            // Event listener calls deleteTask with the task's MongoDB ID
+            deleteDiv.addEventListener('click', () => {
+                if (confirm('Delete this task?')) {
+                    deleteTask(task._id); 
+                }
+            });
+
+            li.append(statusDiv, detailsDiv, deleteDiv);
+            taskList.appendChild(li);
+        });
+
+        const totalTasks = tasks.length;
+        progressText.textContent = `${completedCount} OUT OF ${totalTasks} COMPLETED`;
+        progressBar.style.width = totalTasks > 0 ? `${(completedCount / totalTasks) * 100}%` : '0%';
+    }
+
+    addTaskBtn.addEventListener('click', async () => {
+        const title = taskInput.value.trim();
+        if (!title) return alert('Please enter a task.');
+
+        const today = new Date();
+        const formattedDate = `${String(today.getDate()).padStart(2, '0')}/${String(today.getMonth() + 1).padStart(2, '0')}/${today.getFullYear()}`;
+
+        const newTask = {
+            title,
+            completed: false,
+            date: formattedDate,
+        };
+
+        try {
+            // POST: Create a new task via API
+            const res = await fetch('http://localhost:3000/api/tasks', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(newTask)
+            });
+            if (!res.ok) throw new Error('Failed to add task.');
+
+            taskInput.value = '';
+            await loadTasks(); 
+
+        } catch (e) {
+            console.error('Error adding task:', e);
+            alert('Could not add task. (Ensure MongoDB is running)');
+        }
+    });
+
+    loadTasks();
+});
+</script>
+
+<%- include('partials/footer') %>

@@ -1,0 +1,55 @@
+<%- include('partials/header') %>
+
+<body class="bg-medium-gray">
+
+    <main class="pomodoro-main">
+        <div class="pomodoro-container">
+            <div class="pomodoro-title">
+                <h1>Pomodoro <span>Timer</span></h1>
+                <p>Boost your productivity with focused work sessions</p>
+            </div>
+
+            <div class="stats-bar">
+                <div class="stat-box"><div id="sessions-completed" class="stat-number">0</div><div class="stat-label">Sessions</div></div>
+                <div class="stat-box"><div id="focus-time" class="stat-number">0h 0m</div><div class="stat-label">Focus Time</div></div>
+                <div class="stat-box"><div class="stat-number">24</div><div class="stat-label">Min/Sessions</div></div>
+                <div class="stat-box"><div class="stat-number">5</div><div class="stat-label">Min Break</div></div>
+            </div>
+
+            <div id="timer-display" class="timer-display">25:00</div>
+
+            <div class="timer-controls">
+                <button id="start-btn" class="start-btn">▶ Start</button>
+                <button id="reset-btn" class="reset-btn"><span class="reset-symbol">&#8634;</span> Reset</button>
+            </div>
+
+            <div class="info-box">
+                <p><strong>Work Session:</strong> Focus on one task for 25 minutes without distractions.</p>
+                <p><strong>Short Break:</strong> Step away, stretch, or grab a drink for 5 minutes.</p>
+            </div>
+        </div>
+    </main>
+
+<script src="/js/pomodoro.js" defer></script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const timerDisplay = document.getElementById('timer-display');
+        const startBtn = document.getElementById('start-btn');
+        const resetBtn = document.getElementById('reset-btn');
+        const sessionsCompleted = document.getElementById('sessions-completed');
+        const focusTime = document.getElementById('focus-time');
+
+        const myTimer = new PomodoroTimer(
+            timerDisplay,
+            startBtn,
+            resetBtn,
+            sessionsCompleted,
+            focusTime
+        );
+
+        myTimer.init();
+    });
+</script>
+
+<%- include('partials/footer') %>
