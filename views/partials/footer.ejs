@@ -1,0 +1,36 @@
+<footer>
+    <div class="container footer-content">
+        <div class="logo"><img src="/images/logo.png" alt="Logo" class="symbol"> TASKIFY</div>
+        <div class="footer-links">
+            <a href="#">TERMS</a>
+            <a href="#">SUPPORT</a>
+            <a href="#">PRIVACY POLICY</a>
+            <a href="#">COOKIE POLICY</a>
+        </div>
+    </div>
+</footer>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        // Get all elements with the 'data-route' attribute
+        const allNavLinks = document.querySelectorAll('[data-route]');
+
+        allNavLinks.forEach(link => {
+            link.style.cursor = 'pointer'; // Optional: show it's clickable
+
+            link.addEventListener('click', (event) => {
+                // Prevent any default browser action (though none are set here)
+                event.preventDefault(); 
+                
+                // Get the target route from the data-route attribute
+                const targetRoute = link.getAttribute('data-route');
+
+                // Navigate using JavaScript
+                window.location.href = targetRoute;
+            });
+        });
+    });
+</script>
+
+</body>
+</html>
