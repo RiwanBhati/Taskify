@@ -29,6 +29,7 @@ This project was built to meet the following technical specifications.
       * **To-Do List:** Users can add, delete, and toggle task completion.
       * **Event Planner:** Users can add and delete events.
       * **Pomodoro:** The timer is fully interactive (start, pause, reset).
+        
   * **Data-Driven Pages:** The two main inner pages are fully data-driven. Instead of static JSON, they use the `fetch()` API to call live Node.js endpoints which return JSON data from the MongoDB database:
     1.  **To-Do List (`To-Do-List.ejs`):** Fetches data from `/api/tasks`.
     2.  **Event Planner (`Event_PLanner.ejs`):** Fetches data from `/api/events`.
@@ -75,7 +76,6 @@ This project was built to meet the following technical specifications.
       * **Popups:** Uses standard `alert()` popups for user feedback on form submissions (e.g., "Login failed", "Task added").
       * **Dynamic Toggles:** The password visibility toggles on auth pages.
 
------
 
 ##  Tech Stack Summary
 
@@ -89,7 +89,7 @@ This project was built to meet the following technical specifications.
 | **Security** | Bcryptjs (Password Hashing) |
 | **Dev Tools** | Nodemon, cross-env |
 
------
+
 
 ##  Setup and Installation
 
